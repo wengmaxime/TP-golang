@@ -1,0 +1,94 @@
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"net/http"
+	"time"
+)
+
+func Time(w http.ResponseWriter, req *http.Request) {
+	currentTime := time.Now()
+	switch req.Method {
+	case http.MethodGet:
+		//fmt.Fprintf(w, "Time")
+		fmt.Fprint(w, currentTime.Hour(), "h", currentTime.Minute())
+	}
+}
+
+func Dice(w http.ResponseWriter, req *http.Request) {
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+	switch req.Method {
+	case http.MethodGet:
+		//fmt.Fprintf(w, "Dice")
+		fmt.Fprint(w, r1.Intn(1000))
+	}
+}
+
+func Dices(w http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case http.MethodGet:
+		fmt.Fprintln(w, req.URL)
+		//lien := "/dices"
+		if req.URL != nil {
+			//fmt.Fprintln(w, "ok")
+		}
+		var i int64
+		for i = 0; i < 15; i++ {
+			s1 := rand.NewSource(time.Now().UnixNano() * i)
+			r1 := rand.New(s1)
+			des := r1.Intn(8)
+			switch des {
+			case 0:
+				s1 = rand.NewSource(time.Now().UnixNano() * i)
+				r1 = rand.New(s1)
+				//fmt.Fprint(w, "des à   2 face :")
+				fmt.Fprintln(w, rand.Intn(2))
+			case 1:
+				s1 = rand.NewSource(time.Now().UnixNano() * i)
+				r1 = rand.New(s1)
+				//fmt.Fprint(w, "des à   4 face :")
+				fmt.Fprintln(w, rand.Intn(4))
+			case 2:
+				s1 = rand.NewSource(time.Now().UnixNano() * i)
+				r1 = rand.New(s1)
+				//fmt.Fprint(w, "des à   6 face :")
+				fmt.Fprintln(w, rand.Intn(6))
+			case 3:
+				s1 = rand.NewSource(time.Now().UnixNano() * i)
+				r1 = rand.New(s1)
+				//fmt.Fprint(w, "des à   8 face :")
+				fmt.Fprintln(w, r1.Intn(8))
+			case 4:
+				s1 = rand.NewSource(time.Now().UnixNano() * i)
+				r1 = rand.New(s1)
+				//fmt.Fprint(w, "des à  10 face :")
+				fmt.Fprintln(w, r1.Intn(10))
+			case 5:
+				s1 = rand.NewSource(time.Now().UnixNano() * i)
+				r1 = rand.New(s1)
+				//fmt.Fprint(w, "des à  12 face :")
+				fmt.Fprintln(w, r1.Intn(12))
+			case 6:
+				s1 = rand.NewSource(time.Now().UnixNano() * i)
+				r1 = rand.New(s1)
+				//fmt.Fprint(w, "des à  20 face :")
+				fmt.Fprintln(w, r1.Intn(20))
+			case 7:
+				s1 = rand.NewSource(time.Now().UnixNano() * i)
+				r1 = rand.New(s1)
+				//fmt.Fprint(w, "des à 100 face :")
+				fmt.Fprintln(w, r1.Intn(100))
+			}
+		}
+		//fmt.Fprintf(w, "Dices")
+	}
+}
+
+func main() {
+	http.HandleFunc("/", Time)
+	http.HandleFunc("/dice", Dice)
+	http.HandleFunc("/dices", Dices)
+	http.ListenAndServe(":4567", nil)
+}
